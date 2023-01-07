@@ -1,9 +1,6 @@
-const Button = ({ color, text }) => {
-    const submit = () =>{
-        console.log("Clicked");
-    }
+const Button = ({ color, text, onClick }) => {
   return (
-    <button onClick={submit} style={{ backgroundColor: color }} className="btn">
+    <button onClick={onClick} style={{ backgroundColor: color }} className="btn">
       {text}
     </button>
   );

@@ -1,11 +1,26 @@
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const AddTask = () => {
+const AddTask = ({ onAdd }) => {
   const [text, setText] = useState("");
   const [day, setDay] = useState("");
   const [reminder, setreminder] = useState(false);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (!text) {
+      toast("Please add text!", { theme: "dark" });
+      return;
+    }
+    onAdd({ text, day, reminder });
+    setText("");
+    setDay("");
+    setreminder(false);
+  };
+
   return (
-    <form className="add-form">
+    <form className="add-form" onSubmit={onSubmit}>
       <div className="form-control">
         <label>Task</label>
         <input
@@ -28,9 +43,11 @@ const AddTask = () => {
         <label>Set Reminder</label>
         <input
           type="checkbox"
+          checked={reminder}
           value={reminder}
           onChange={(e) => setreminder(e.currentTarget.checked)}
         />
+        <ToastContainer />
       </div>
       <input type="submit" value="Save Task" className="btn btn-block" />
     </form>
