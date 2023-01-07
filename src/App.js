@@ -44,18 +44,27 @@ function App() {
           onAdd={() => setshowAddTask(!showAddTask)}
           showAdd={showAddTask}
         />
-        {showAddTask && <AddTask onAdd={addTask} />}
-        {tasks.length > 0 ? (
-          <Tasks
-            tasks={tasks}
-            onDelete={deleteTask}
-            onToggle={toggleReminder}
-          />
-        ) : (
-          "It's lonely in here, add some tasks."
-        )}
+
         <Routes>
-        <Route path="/about" component={About} />
+          <Route
+            path="/"
+            exact
+            element={
+              <>
+                {showAddTask && <AddTask onAdd={addTask} />}
+                {tasks.length > 0 ? (
+                  <Tasks
+                    tasks={tasks}
+                    onDelete={deleteTask}
+                    onToggle={toggleReminder}
+                  />
+                ) : (
+                  "It's lonely in here, add some tasks."
+                )}
+              </>
+            }
+          />
+          <Route path="/about" element={<About />} />
         </Routes>
         <Footer />
       </div>
