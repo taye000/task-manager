@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -6,6 +7,19 @@ const AddTask = ({ onAdd }) => {
   const [text, setText] = useState("");
   const [day, setDay] = useState("");
   const [reminder, setreminder] = useState(false);
+  const url = "http://localhost:5000/tasks/create";
+
+  useEffect(() => {
+    const data = {
+      task: text,
+      day: day,
+      reminder: reminder,
+    };
+    axios.post(url, data).then((res) => {
+      console.log(res);
+      console.log(res.data);
+    });
+  }, [text, day, reminder]);
 
   const onSubmit = (e) => {
     e.preventDefault();
