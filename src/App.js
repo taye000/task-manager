@@ -1,24 +1,38 @@
 import { toast } from "react-toastify";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
 import Footer from "./components/Footer";
 import About from "./components/About";
+import axios from "axios";
 
 function App() {
   const [showAddTask, setshowAddTask] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  //add task
-  const addTask = (task) => {
-    const id = Math.floor(Math.random() * 10000) + 1;
-    const newTask = { id, ...task };
-    setTasks([...tasks, newTask]);
-    if (newTask) {
-      toast("New Task Added", { theme: "dark" });
-    }
+  useEffect(() => {
+    handleLoadTasks();
+  }, []);
+
+  // fetch tasks
+  const handleLoadTasks = () => {
+    const url = "http://localhost:5000/tasks";
+
+    setIsLoading(true);
+    axios
+      .get(url)
+      .then((response) => {
+        setTasks(response.data.allTasks || []);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setIsLoading(false);
+      });
   };
 
   //delete task
@@ -51,10 +65,12 @@ function App() {
             exact
             element={
               <>
-                {showAddTask && <AddTask onAdd={addTask} />}
+                {showAddTask && <AddTask handleLoadTasks={handleLoadTasks} />}
                 {tasks.length > 0 ? (
                   <Tasks
+                    isLoading={isLoading}
                     tasks={tasks}
+                    error={error}
                     onDelete={deleteTask}
                     onToggle={toggleReminder}
                   />
